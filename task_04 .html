@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do App</title>
+  <link rel="stylesheet" href="task_04.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <h1>To-Do List</h1>
+    <p id="summary">0 tasks</p>
+
+    <!-- Add Task Form -->
+    <div class="form-box">
+      <input type="text" id="taskInput" placeholder="Enter a new task..." />
+      <div class="form-row">
+        <select id="priority">
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="low">Low</option>
+        </select>
+        <input type="datetime-local" id="dueDate" />
+      </div>
+      <button id="addBtn" onclick="addTask()">+ Add Task</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="active" id="f-all"    onclick="setFilter('all', this)">All</button>
+      <button               id="f-active" onclick="setFilter('active', this)">Active</button>
+      <button               id="f-done"   onclick="setFilter('done', this)">Completed</button>
+    </div>
+
+    <!-- Task List -->
+    <div id="taskList"></div>
+
+  </div>
+
+  <script>
+
+    var tasks = [];
+    var nextId = 1;
+    var filter = "all";
+
+    function addTask() {
+      var text = document.getElementById("taskInput").value.trim();
+      if (text == "") {
+        alert("Please enter a task!");
+        return;
+      }
+
+      var task = {
+        id: nextId++,
+        text: text,
+        done: false,
+        priority: document.getElementById("priority").value,
+        date: document.getElementById("dueDate").value,
+        editing: false
+      };
+
+      tasks.push(task);
+      document.getElementById("taskInput").value = "";
+      document.getElementById("dueDate").value = "";
+      render();
+    }
+
+    function toggleDone(id) {
+      var task = find(id);
+      task.done = !task.done;
+      render();
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(function(t) { return t.id != id; });
+      render();
+    }
+
+    function startEdit(id) {
+      var task = find(id);
+      task.editing = true;
+      render();
+      document.getElementById("e" + id).focus();
+    }
+
+    function saveEdit(id) {
+      var task = find(id);
+      var val = document.getElementById("e" + id).value.trim();
+      if (val != "") task.text = val;
+      task.editing = false;
+      render();
+    }
+
+    function setFilter(f, btn) {
+      filter = f;
+      var allBtns = document.querySelectorAll(".filters button");
+      for (var i = 0; i < allBtns.length; i++) {
+        allBtns[i].classList.remove("active");
+      }
+      btn.classList.add("active");
+      render();
+    }
+
+    function find(id) {
+      for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].id == id) return tasks[i];
+      }
+    }
+
+    function formatDate(d) {
+      if (!d) return "";
+      var dt = new Date(d);
+      return dt.toLocaleDateString() + " " + dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function render() {
+      // Filter
+      var list = tasks.filter(function(t) {
+        if (filter == "active") return !t.done;
+        if (filter == "done")   return t.done;
+        return true;
+      });
+
+      var div = document.getElementById("taskList");
+      div.innerHTML = "";
+
+      if (list.length == 0) {
+        div.innerHTML = '<p class="no-tasks">No tasks here!</p>';
+      }
+
+      for (var i = 0; i < list.length; i++) {
+        var t = list[i];
+
+        var item = document.createElement("div");
+        item.className = "task" + (t.done ? " done" : "");
+
+        // Checkbox
+        var check = document.createElement("div");
+        check.className = "check" + (t.done ? " checked" : "");
+        check.innerText = t.done ? "✓" : "";
+        check.onclick = (function(id) { return function() { toggleDone(id); }; })(t.id);
+
+        // Info
+        var info = document.createElement("div");
+        info.className = "task-info";
+
+        if (t.editing) {
+          var inp = document.createElement("input");
+          inp.className = "edit-field";
+          inp.id = "e" + t.id;
+          inp.value = t.text;
+          inp.onkeydown = (function(id) {
+            return function(e) {
+              if (e.key == "Enter") saveEdit(id);
+              if (e.key == "Escape") { find(id).editing = false; render(); }
+            };
+          })(t.id);
+          info.appendChild(inp);
+        } else {
+          var name = document.createElement("div");
+          name.className = "task-name";
+          name.innerText = t.text;
+          info.appendChild(name);
+
+          var meta = document.createElement("div");
+          meta.className = "task-meta";
+
+          var badge = document.createElement("span");
+          badge.className = "badge " + t.priority;
+          badge.innerText = t.priority.charAt(0).toUpperCase() + t.priority.slice(1);
+          meta.appendChild(badge);
+
+          if (t.date) {
+            var dateSpan = document.createElement("span");
+            dateSpan.innerText = "📅 " + formatDate(t.date);
+            meta.appendChild(dateSpan);
+          }
+
+          info.appendChild(meta);
+        }
+
+        // Buttons
+        var actions = document.createElement("div");
+        actions.className = "actions";
+
+        var editBtn = document.createElement("button");
+        editBtn.title = t.editing ? "Save" : "Edit";
+        editBtn.innerText = t.editing ? "💾" : "✏️";
+        editBtn.onclick = (function(id, isEditing) {
+          return function() {
+            if (isEditing) saveEdit(id);
+            else startEdit(id);
+          };
+        })(t.id, t.editing);
+
+        var delBtn = document.createElement("button");
+        delBtn.title = "Delete";
+        delBtn.innerText = "🗑️";
+        delBtn.onclick = (function(id) { return function() { deleteTask(id); }; })(t.id);
+
+        actions.appendChild(editBtn);
+        actions.appendChild(delBtn);
+
+        item.appendChild(check);
+        item.appendChild(info);
+        item.appendChild(actions);
+        div.appendChild(item);
+      }
+
+      // Update summary
+      var done = tasks.filter(function(t) { return t.done; }).length;
+      document.getElementById("summary").innerText = tasks.length + " tasks — " + done + " completed";
+    }
+
+    // Enter to add task
+    document.getElementById("taskInput").addEventListener("keydown", function(e) {
+      if (e.key == "Enter") addTask();
+    });
+
+    render();
+
+  </script>
+
+</body>
+</html>
