@@ -1,0 +1,222 @@
+
+
+    body {
+      background-color: #1a1a2e;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 540px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #e74c3c;
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    #summary {
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* Add task form */
+    .form-box {
+      background-color: #16213e;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .form-box input,
+    .form-box select {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #1a1a2e;
+      border: 2px solid #2a2a4a;
+      border-radius: 7px;
+      color: white;
+      font-size: 15px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    .form-box input:focus {
+      border-color: #e74c3c;
+    }
+
+    .form-box input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-row select {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .form-row input {
+      flex: 2;
+      margin-bottom: 0;
+    }
+
+    #addBtn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 11px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #addBtn:hover {
+      background-color: #c0392b;
+    }
+
+    /* Filter tabs */
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .filters button {
+      padding: 6px 16px;
+      border: 2px solid #2a2a4a;
+      border-radius: 20px;
+      background: transparent;
+      color: #ccc;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .filters button.active {
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+
+    /* Task items */
+    .task {
+      background-color: #16213e;
+      border-radius: 10px;
+      padding: 13px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .task.done {
+      opacity: 0.5;
+    }
+
+    .task.done .task-name {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    /* Checkbox circle */
+    .check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #e74c3c;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .check.checked {
+      background-color: #e74c3c;
+      color: white;
+      font-size: 13px;
+    }
+
+    .task-info {
+      flex: 1;
+    }
+
+    .task-name {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .task-meta {
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .high   { background-color: #3a1a1a; color: #e74c3c; }
+    .medium { background-color: #3a2a1a; color: #e67e22; }
+    .low    { background-color: #1a3a2a; color: #27ae60; }
+
+    /* Action buttons */
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .actions button {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .actions button:hover {
+      color: white;
+    }
+
+    /* Inline edit input */
+    .edit-field {
+      width: 100%;
+      padding: 6px 10px;
+      background-color: #1a1a2e;
+      border: 2px solid #e74c3c;
+      border-radius: 6px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .no-tasks {
+      text-align: center;
+      color: #555;
+      padding: 30px;
+      font-size: 15px;
+    }
+
+  
